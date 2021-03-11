@@ -91,8 +91,8 @@ class SpeedTester:
         while True:
             self.__eventHandler()
             self.__screen.fill((245, 245, 245))
-            self.__renderScreen()
             self.__statistics()
+            self.__renderScreen()
             pygame.display.flip()
 
 
