@@ -17,6 +17,10 @@ class SpeedTester:
         self.__stats = []  # can be anything or just spread it out to multiple variables if needed
         self.__time = 0  # will be changed in the initializeTypingTest
         self.__realTimeStat = False
+        self.__screenToBeRendered = "M"
+        self.__typed = ""
+        self.__mainButton = [0, 0, 0, 0]  # x1,x2,y1,y2 of the start button in the main screen
+        self.__resetButton = [0, 0, 0, 0]  # x1,x2,y1,y2 of the reset button in the last screen
 
     def __statistics(self):
         """
@@ -40,6 +44,35 @@ class SpeedTester:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.__mouePressHandler()
+            if event.type == pygame.KEYDOWN:
+                self.__keyPressesHandler(event)
+
+    def __mouePressHandler(self):
+        self.__mouse = pygame.mouse.get_pos()
+        # print(self.__mouse)  # uncomment this to see the position of the mouse when it is clicked
+        if self.__screenToBeRendered == "H":
+            if self.__mainButton[0] < self.__mouse[0] < self.__mainButton[1]:
+                if self.__mainButton[2] < self.__mouse[1] < self.__mainButton[3]:
+                    self.__screenToBeRendered = "T"
+        elif self.__screenToBeRendered == "D":
+            if self.__resetButton[0] < self.__mouse[0] < self.__resetButton[1]:
+                if self.__resetButton[2] < self.__mouse[1] < self.__resetButton[3]:
+                    self.__screenToBeRendered = "T"
+
+    def __keyPressesHandler(self, event):
+        press = pygame.key.name(event.key)
+        if press != "space":
+            if press != "return":
+                if press != "backspace":
+                    self.__typed += press
+                else:
+                    self.__typed = self.__typed[:-1]
+            else:
+                self.__typed += "\n"
+        else:
+            self.__typed += " "
 
     def __typingChecker(self):
         """
@@ -82,6 +115,12 @@ class SpeedTester:
         factory to choose which screen to render
         :return:
         """
+        if self.__screenToBeRendered == "M":
+            self.__mainScreen()
+        elif self.__screenToBeRendered == "T":
+            self.__typingScreen()
+        elif self.__screenToBeRendered == "D":
+            self.__testDoneScreen()
 
     def main(self):
         """
