@@ -9,11 +9,25 @@ class SpeedTester:
         initializes all the needed elements e.g pictures/time/pygame window
         and all needed  attributes
         """
-        pass
+        pygame.init()
+        self.__width, self.__height = 680, 480
+        self.__screen = pygame.display.set_mode((self.__width, self.__height))
+        self.__font = pygame.font.Font("freesansbold.ttf", 20)
+        self.__mouse = pygame.mouse.get_pos()
+        self.__stats = []  # can be anything or just spread it out to multiple variables if needed
+        self.__time = 0  # will be changed in the initializeTypingTest
+        self.__realTimeStat = False
 
     def __statistics(self):
         """
         calculates the statistics
+        :return:
+        """
+        pass
+
+    def __statisticsRenderer(self):
+        """
+        renders the calculated statistics
         :return:
         """
         pass
@@ -23,7 +37,9 @@ class SpeedTester:
         handles the events that happen on screen e.g. mouse pos/clicks and user input
         :return:
         """
-        pass
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
 
     def __typingChecker(self):
         """
@@ -72,7 +88,12 @@ class SpeedTester:
         main program loop
         :return:
         """
-        pass
+        while True:
+            self.__eventHandler()
+            self.__screen.fill((245, 245, 245))
+            self.__renderScreen()
+            self.__statistics()
+            pygame.display.flip()
 
 
 test = SpeedTester()
