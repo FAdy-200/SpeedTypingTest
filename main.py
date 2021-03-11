@@ -61,6 +61,12 @@ class SpeedTester:
         """
         pass
 
+    def __renderScreen(self):
+        """
+        factory to choose which screen to render
+        :return:
+        """
+
     def main(self):
         """
         main program loop
