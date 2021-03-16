@@ -22,7 +22,7 @@ class SpeedTester:
         self.__realTimeStat = False
         self.__screenToBeRendered = "M"
         self.__typed = ""
-        self.__mainButton = [160, 160+346 ,160, 160+76]  # x1,x2,y1,y2 of the start button in the main screen
+        self.__mainButton = [160, 160 + 346, 160, 160 + 76]  # x1,x2,y1,y2 of the start button in the main screen
         self.__resetButton = [0, 0, 0, 0]  # x1,x2,y1,y2 of the reset button in the last screen
 
     def __statistics(self):
@@ -58,10 +58,12 @@ class SpeedTester:
         if self.__screenToBeRendered == "M":
             if self.__mainButton[0] < self.__mouse[0] < self.__mainButton[1]:
                 if self.__mainButton[2] < self.__mouse[1] < self.__mainButton[3]:
+                    self.__initializeTypingTest()
                     self.__screenToBeRendered = "T"
         elif self.__screenToBeRendered == "D":
             if self.__resetButton[0] < self.__mouse[0] < self.__resetButton[1]:
                 if self.__resetButton[2] < self.__mouse[1] < self.__resetButton[3]:
+                    self.__initializeTypingTest()
                     self.__screenToBeRendered = "T"
 
     def __keyPressesHandler(self, event):
@@ -112,13 +114,13 @@ class SpeedTester:
         :return:
         """
         welcome_img = pygame.image.load("welcome_img.png")
-        self.__screen.blit(welcome_img, (230 ,270))
+        self.__screen.blit(welcome_img, (230, 270))
         title = self.__font.render("Welcome to Typing", True, (64, 78, 128))
         title2 = self.__font.render("Speed Test!", True, (64, 78, 128))
         text = self.__font.render("Click to Start", True, (255, 191, 0), (235, 235, 235))
         # print(text.get_size())
-        self.__screen.blit(title, (70,10))
-        self.__screen.blit(title2,(180, 70))
+        self.__screen.blit(title, (70, 10))
+        self.__screen.blit(title2, (180, 70))
         self.__screen.blit(text, (160, 160))
 
     def __renderScreen(self):
