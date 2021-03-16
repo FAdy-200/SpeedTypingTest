@@ -59,10 +59,12 @@ class SpeedTester:
         if self.__screenToBeRendered == "M":
             if self.__mainButton[0] < self.__mouse[0] < self.__mainButton[1]:
                 if self.__mainButton[2] < self.__mouse[1] < self.__mainButton[3]:
+                    self.__initializeTypingTest()
                     self.__screenToBeRendered = "T"
         elif self.__screenToBeRendered == "D":
             if self.__resetButton[0] < self.__mouse[0] < self.__resetButton[1]:
                 if self.__resetButton[2] < self.__mouse[1] < self.__resetButton[3]:
+                    self.__initializeTypingTest()
                     self.__screenToBeRendered = "T"
 
     def __keyPressesHandler(self, event):
