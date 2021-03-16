@@ -12,14 +12,17 @@ class SpeedTester:
         pygame.init()
         self.__width, self.__height = 680, 480
         self.__screen = pygame.display.set_mode((self.__width, self.__height))
-        self.__font = pygame.font.Font("freesansbold.ttf", 20)
+        pygame.display.set_caption("Typing Speed Test")
+        self.__icon = pygame.image.load("icon.png")
+        pygame.display.set_icon(self.__icon)
+        self.__font = pygame.font.Font("Bogart-Bold-trial.ttf", 50)
         self.__mouse = pygame.mouse.get_pos()
         self.__stats = []  # can be anything or just spread it out to multiple variables if needed
         self.__time = 0  # will be changed in the initializeTypingTest
         self.__realTimeStat = False
         self.__screenToBeRendered = "M"
         self.__typed = ""
-        self.__mainButton = [0, 0, 0, 0]  # x1,x2,y1,y2 of the start button in the main screen
+        self.__mainButton = [160, 160+346 ,160, 160+76]  # x1,x2,y1,y2 of the start button in the main screen
         self.__resetButton = [0, 0, 0, 0]  # x1,x2,y1,y2 of the reset button in the last screen
 
     def __statistics(self):
@@ -52,7 +55,7 @@ class SpeedTester:
     def __mouePressHandler(self):
         self.__mouse = pygame.mouse.get_pos()
         # print(self.__mouse)  # uncomment this to see the position of the mouse when it is clicked
-        if self.__screenToBeRendered == "H":
+        if self.__screenToBeRendered == "M":
             if self.__mainButton[0] < self.__mouse[0] < self.__mainButton[1]:
                 if self.__mainButton[2] < self.__mouse[1] < self.__mainButton[3]:
                     self.__screenToBeRendered = "T"
@@ -108,7 +111,15 @@ class SpeedTester:
         and there is a welcome screen
         :return:
         """
-        pass
+        welcome_img = pygame.image.load("welcome_img.png")
+        self.__screen.blit(welcome_img, (230 ,270))
+        title = self.__font.render("Welcome to Typing", True, (64, 78, 128))
+        title2 = self.__font.render("Speed Test!", True, (64, 78, 128))
+        text = self.__font.render("Click to Start", True, (255, 191, 0), (235, 235, 235))
+        # print(text.get_size())
+        self.__screen.blit(title, (70,10))
+        self.__screen.blit(title2,(180, 70))
+        self.__screen.blit(text, (160, 160))
 
     def __renderScreen(self):
         """
