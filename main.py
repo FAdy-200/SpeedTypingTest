@@ -16,13 +16,14 @@ class SpeedTester:
         self.__icon = pygame.image.load("icon.png")
         pygame.display.set_icon(self.__icon)
         self.__font = pygame.font.Font("Bogart-Bold-trial.ttf", 50)
+        self.__welcome_img = pygame.image.load("welcome_img.png")
         self.__mouse = pygame.mouse.get_pos()
         self.__stats = []  # can be anything or just spread it out to multiple variables if needed
         self.__time = 0  # will be changed in the initializeTypingTest
         self.__realTimeStat = False
         self.__screenToBeRendered = "M"
         self.__typed = ""
-        self.__mainButton = [160, 160+346 ,160, 160+76]  # x1,x2,y1,y2 of the start button in the main screen
+        self.__mainButton = [160, 160 + 346, 160, 160 + 76]  # x1,x2,y1,y2 of the start button in the main screen
         self.__resetButton = [0, 0, 0, 0]  # x1,x2,y1,y2 of the reset button in the last screen
 
     def __statistics(self):
@@ -111,14 +112,13 @@ class SpeedTester:
         and there is a welcome screen
         :return:
         """
-        welcome_img = pygame.image.load("welcome_img.png")
-        self.__screen.blit(welcome_img, (230 ,270))
+        self.__screen.blit(self.__welcome_img, (230, 270))
         title = self.__font.render("Welcome to Typing", True, (64, 78, 128))
         title2 = self.__font.render("Speed Test!", True, (64, 78, 128))
         text = self.__font.render("Click to Start", True, (255, 191, 0), (235, 235, 235))
         # print(text.get_size())
-        self.__screen.blit(title, (70,10))
-        self.__screen.blit(title2,(180, 70))
+        self.__screen.blit(title, (70, 10))
+        self.__screen.blit(title2, (180, 70))
         self.__screen.blit(text, (160, 160))
 
     def __renderScreen(self):
