@@ -18,9 +18,9 @@ class SpeedTester:
         pygame.display.set_icon(self.__icon)
         self.__font = pygame.font.Font("Bogart-Bold-trial.ttf", 50)
         self.__welcome_img = pygame.image.load("welcome_img.png")
+        self.__sentences = open("sentences.txt", "r").readlines()
         self.__text = ''.join(random.choice(self.__sentences))
         self.__mouse = pygame.mouse.get_pos()
-        self.__sentences  = open("sentences.txt", "r").readlines()
         self.__stats = []  # can be anything or just spread it out to multiple variables if needed
         self.__time = 0  # will be changed in the initializeTypingTest
         self.__realTimeStat = False
@@ -97,7 +97,7 @@ class SpeedTester:
         """
         pass
 
-    def __typingScreen(self, text):
+    def __typingScreen(self):
         """
         renders the typing screen with it is needed elements
         :return:
@@ -105,7 +105,7 @@ class SpeedTester:
         title = self.__font.render("Type the sentence below:", True, (64, 78, 128))
         self.__screen.blit(title, (20,10))
         font = pygame.font.Font("Bogart-Bold-trial.ttf", 20)
-        self.__screen.blit(font.render(text, True, (0, 0, 0)), (10, 100))
+        self.__screen.blit(font.render(self.__text, True, (0, 0, 0)), (10, 100))
         img = font.render(self.__typed, True, (0, 0, 0))
         rect = pygame.Rect((10,200), (self.__width - 20, img.get_height()))
         pygame.draw.rect(self.__screen, (255, 191, 0), rect, 1)
