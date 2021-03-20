@@ -109,7 +109,7 @@ class SpeedTester:
         for i in range(len(self.__text)):
             try:
                 if self.__text[i] == self.__typed[i]:
-                    self.__pts +=1
+                    self.__pts += 1
             except IndexError:             # User hasnot completed the sentence
                 break
         self.__statistics()
@@ -152,13 +152,18 @@ class SpeedTester:
         rect = pygame.Rect((10,200), (self.__width - 20, img.get_height()+10))
         pygame.draw.rect(self.__screen, (255, 191, 0), rect, 1)
         self.__screen.blit(img, (10,205))
+
     def __testDoneScreen(self):
         """
         renders the end screen with it is needed elements
         :return:
         """
         self.__screen.blit(self.__font.render("Results", True ,(64, 78, 128) ) , (self.__width//3 , 10))
-        self.__screen.blit(pygame.image.load("results.svg"), (self.__width//2, 10))
+        img = pygame.image.load("results.svg")
+        img = pygame.transform.scale(img, (150,150))
+        self.__screen.blit(img, ((2*self.__width)//3, 0))
+        self.__screen.blit(self.__font.render("Accuracy: " + f"{self.__stats[0]:f}", True, (64, 78,128)), (20,150))
+        self.__screen.blit(self.__font.render("Speed: " + f"{self.__stats[1]:f}", True, (64, 78, 128)), (20, 220))
 
     def __mainScreen(self):
         """
