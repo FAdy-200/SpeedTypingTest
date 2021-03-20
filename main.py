@@ -17,7 +17,7 @@ class SpeedTester:
         self.__icon = pygame.image.load("icon.png")
         pygame.display.set_icon(self.__icon)
         self.__font = pygame.font.Font("Bogart-Bold-trial.ttf", 50)
-        self.__welcome_img = pygame.image.load("welcome_img.png")
+        self.__welcome_img = pygame.image.load("Welcome_img.png")
         self.__sentences = open("sentences.txt", "r").readlines()
         self.__text = ''.join(random.choice(self.__sentences))
         self.__mouse = pygame.mouse.get_pos()
@@ -26,6 +26,10 @@ class SpeedTester:
         self.__realTimeStat = False
         self.__screenToBeRendered = "M"
         self.__typed = ""
+        self.__shift = False
+        self.__caps = -1
+        self.__backspace = False
+        self.__backspaceTime = 20
         self.__mainButton = [160, 160 + 346, 160, 160 + 76]  # x1,x2,y1,y2 of the start button in the main screen
         self.__resetButton = [0, 0, 0, 0]  # x1,x2,y1,y2 of the reset button in the last screen
 
@@ -55,6 +59,10 @@ class SpeedTester:
                 self.__mouePressHandler()
             if event.type == pygame.KEYDOWN:
                 self.__keyPressesHandler(event)
+            if event.type == pygame.KEYUP:
+                self.__backspace = False
+                self.__backspaceTime = 20
+                self.__shift = False
 
     def __mouePressHandler(self):
         self.__mouse = pygame.mouse.get_pos()
@@ -70,14 +78,33 @@ class SpeedTester:
                     self.__initializeTypingTest()
                     self.__screenToBeRendered = "T"
 
+    def __backspaceHandler(self):
+        if self.__backspace:
+            self.__backspaceTime -= 1
+            if self.__backspaceTime == 0:
+                self.__typed = self.__typed[:-1]
+                self.__backspaceTime = 20
+
     def __keyPressesHandler(self, event):
+        pressed = pygame.key.get_pressed()
         press = pygame.key.name(event.key)
+        if pressed[pygame.K_LSHIFT] or pressed[pygame.K_RSHIFT]:
+            self.__shift = True
+        if press == "caps lock":
+            self.__caps *= -1
+        if self.__shift:
+            press = press.upper()
+        if self.__caps > 0:
+            press = press.swapcase()
         if press != "space":
             if press != "return":
                 if press != "backspace":
-                    self.__typed += press
+                    if press != "LEFT SHIFT" and press != "RIGHT SHIFT" and len(press) == 1 and press != "CAPS LOCK":
+                        self.__typed += press
+                        self.__shift = False
+                        self.__backspace = False
                 else:
-                    self.__typed = self.__typed[:-1]
+                    self.__backspace = True
             else:
                 self.__typed += "\n"
         else:
@@ -103,13 +130,13 @@ class SpeedTester:
         :return:
         """
         title = self.__font.render("Type the sentence below:", True, (64, 78, 128))
-        self.__screen.blit(title, (20,10))
+        self.__screen.blit(title, (20, 10))
         font = pygame.font.Font("Bogart-Bold-trial.ttf", 20)
         self.__screen.blit(font.render(self.__text, True, (0, 0, 0)), (10, 100))
         img = font.render(self.__typed, True, (0, 0, 0))
-        rect = pygame.Rect((10,200), (self.__width - 20, img.get_height()))
+        rect = pygame.Rect((10, 200), (self.__width - 20, img.get_height()))
         pygame.draw.rect(self.__screen, (255, 191, 0), rect, 1)
-        self.__screen.blit(img, (10,200))
+        self.__screen.blit(img, (10, 200))
 
     def __testDoneScreen(self):
         """
@@ -152,6 +179,7 @@ class SpeedTester:
         """
         while True:
             self.__eventHandler()
+            self.__backspaceHandler()
             self.__screen.fill((245, 245, 245))
             self.__statistics()
             self.__renderScreen()
