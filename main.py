@@ -14,34 +14,23 @@ class SpeedTester:
         self.__width, self.__height = 680, 480
         self.__screen = pygame.display.set_mode((self.__width, self.__height))
         pygame.display.set_caption("Typing Speed Test")
-        self.__icon = pygame.image.load("icon.png")
+        self.__icon = pygame.image.load("icon.svg")
         pygame.display.set_icon(self.__icon)
         self.__font = pygame.font.Font("Bogart-Bold-trial.ttf", 50)
         self.__welcome_img = pygame.image.load("welcome_img.png")
         self.__sentences = open("sentences.txt", "r").readlines()
         self.__text = ''.join(random.choice(self.__sentences))
         self.__mouse = pygame.mouse.get_pos()
+        self.__pts = 0
         self.__stats = []  # can be anything or just spread it out to multiple variables if needed
         self.__time = 0  # will be changed in the initializeTypingTest
+        self.__time2 = 0
         self.__realTimeStat = False
         self.__screenToBeRendered = "M"
         self.__typed = ""
         self.__mainButton = [160, 160 + 346, 160, 160 + 76]  # x1,x2,y1,y2 of the start button in the main screen
         self.__resetButton = [0, 0, 0, 0]  # x1,x2,y1,y2 of the reset button in the last screen
 
-    def __statistics(self):
-        """
-        calculates the statistics
-        :return:
-        """
-        pass
-
-    def __statisticsRenderer(self):
-        """
-        renders the calculated statistics
-        :return:
-        """
-        pass
 
     def __eventHandler(self):
         """
@@ -63,6 +52,7 @@ class SpeedTester:
             if self.__mainButton[0] < self.__mouse[0] < self.__mainButton[1]:
                 if self.__mainButton[2] < self.__mouse[1] < self.__mainButton[3]:
                     self.__initializeTypingTest()
+                    self.__time = time.time()
                     self.__screenToBeRendered = "T"
         elif self.__screenToBeRendered == "D":
             if self.__resetButton[0] < self.__mouse[0] < self.__resetButton[1]:
@@ -79,13 +69,38 @@ class SpeedTester:
                 else:
                     self.__typed = self.__typed[:-1]
             else:
-                self.__typed += "\n"
+                self.__time2 = time.time()
+                self.__typingChecker()
         else:
             self.__typed += " "
 
     def __typingChecker(self):
         """
         checks if the user has inputted the right characters
+        :return:
+        """
+        for i in range(len(self.__text)):
+            try:
+                if self.__text[i] == self.__typed[i]:
+                    self.__pts +=1
+            except IndexError:             # User hasnot completed the sentence
+                break
+        self.__statistics()
+
+    def __statistics(self):
+        """
+        calculates the statistics
+        :return:
+        """
+        correctness = (self.__pts/ len(self.__text)) * 100
+        speed = abs(self.__time2 - self.__time)
+        self.__stats.extend([correctness, speed])
+        self.__screenToBeRendered = 'D'
+
+
+    def __statisticsRenderer(self):
+        """
+        renders the calculated statistics
         :return:
         """
         pass
@@ -107,16 +122,17 @@ class SpeedTester:
         font = pygame.font.Font("Bogart-Bold-trial.ttf", 20)
         self.__screen.blit(font.render(self.__text, True, (0, 0, 0)), (10, 100))
         img = font.render(self.__typed, True, (0, 0, 0))
-        rect = pygame.Rect((10,200), (self.__width - 20, img.get_height()))
+        rect = pygame.Rect((10,200), (self.__width - 20, img.get_height()+10))
         pygame.draw.rect(self.__screen, (255, 191, 0), rect, 1)
-        self.__screen.blit(img, (10,200))
+        self.__screen.blit(img, (10,205))
 
     def __testDoneScreen(self):
         """
         renders the end screen with it is needed elements
         :return:
         """
-        pass
+        self.__screen.blit(self.__font.render("Results", True ,(64, 78, 128) ) , (self.__width//3 , 10))
+        self.__screen.blit(pygame.image.load("results.svg"), (self.__width//2, 10))
 
     def __mainScreen(self):
         """
@@ -153,7 +169,6 @@ class SpeedTester:
         while True:
             self.__eventHandler()
             self.__screen.fill((245, 245, 245))
-            self.__statistics()
             self.__renderScreen()
             pygame.display.flip()
 
