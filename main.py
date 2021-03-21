@@ -137,7 +137,8 @@ class SpeedTester:
         resets the statistics and the typing challenge
         :return:
         """
-        pass
+        self.__typed = ""
+        self.__text = ''.join(random.choice(self.__sentences))
 
     def __typingScreen(self):
         """
