@@ -11,12 +11,12 @@ class SpeedTester:
         and all needed  attributes
         """
         pygame.init()
-        self.__width, self.__height = 680, 480
+        self.__width, self.__height = 700, 480
         self.__screen = pygame.display.set_mode((self.__width, self.__height))
         pygame.display.set_caption("Typing Speed Test")
         self.__icon = pygame.image.load("icon.svg")
         pygame.display.set_icon(self.__icon)
-        self.__font = pygame.font.Font("Bogart-Bold-trial.ttf", 50)
+        self.__font = pygame.font.Font("MADE Sunflower PERSONAL USE.otf", 58)
         self.__welcome_img = pygame.image.load("Welcome_img.png")
         self.__sentences = open("sentences.txt", "r").readlines()
         self.__text = ''.join(random.choice(self.__sentences))
@@ -145,8 +145,8 @@ class SpeedTester:
         :return:
         """
         title = self.__font.render("Type the sentence below:", True, (64, 78, 128))
-        self.__screen.blit(title, (20, 10))
-        font = pygame.font.Font("Bogart-Bold-trial.ttf", 20)
+        self.__screen.blit(title, (5, 10))
+        font = pygame.font.Font("MADE Sunflower PERSONAL USE.otf", 23)
         self.__screen.blit(font.render(self.__text, True, (0, 0, 0)), (10, 100))
         img = font.render(self.__typed, True, (0, 0, 0))
         rect = pygame.Rect((10,200), (self.__width - 20, img.get_height()+10))
@@ -162,8 +162,8 @@ class SpeedTester:
         img = pygame.image.load("results.svg")
         img = pygame.transform.scale(img, (150,150))
         self.__screen.blit(img, ((2*self.__width)//3, 0))
-        self.__screen.blit(self.__font.render("Accuracy: " + f"{self.__stats[0]:f}", True, (64, 78,128)), (20,150))
-        self.__screen.blit(self.__font.render("Speed: " + f"{self.__stats[1]:f}", True, (64, 78, 128)), (20, 220))
+        self.__screen.blit(self.__font.render("Accuracy: " + f"{self.__stats[0]:.2f}%", True, (64, 78,128)), (20,150))
+        self.__screen.blit(self.__font.render("Speed: " + f"{self.__stats[1]:.2f}secs.", True, (64, 78, 128)), (20, 220))
 
     def __mainScreen(self):
         """
