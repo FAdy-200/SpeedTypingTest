@@ -31,10 +31,9 @@ class SpeedTester:
         self.__shift = False
         self.__caps = -1
         self.__backspace = False
-        self.__backspaceTime = 20
+        self.__backspaceTime = 200
         self.__mainButton = [160, 160 + 346, 160, 160 + 76]  # x1,x2,y1,y2 of the start button in the main screen
         self.__resetButton = [300, 420, 350, 470]  # x1,x2,y1,y2 of the reset button in the last screen
-
 
     def __eventHandler(self):
         """
@@ -50,7 +49,7 @@ class SpeedTester:
                 self.__keyPressesHandler(event)
             if event.type == pygame.KEYUP:
                 self.__backspace = False
-                self.__backspaceTime = 20
+                self.__backspaceTime = 70
                 self.__shift = False
 
     def __mouePressHandler(self):
@@ -70,10 +69,12 @@ class SpeedTester:
 
     def __backspaceHandler(self):
         if self.__backspace:
-            self.__backspaceTime -= 1
+
             if self.__backspaceTime == 0:
+                self.__backspaceTime = 70
                 self.__typed = self.__typed[:-1]
-                self.__backspaceTime = 20
+            self.__backspaceTime -= 1
+
 
     def __keyPressesHandler(self, event):
         pressed = pygame.key.get_pressed()
@@ -87,14 +88,16 @@ class SpeedTester:
         if self.__caps > 0:
             press = press.swapcase()
         if press != "space" and press != "SPACE":
-            if press != "return" and press !="RETURN":
-                if press != "backspace":
+            if press != "return" and press != "RETURN":
+                if press != "backspace" and press != "BACKSPACE":
                     if press != "LEFT SHIFT" and press != "RIGHT SHIFT" and len(press) == 1 and press != "CAPS LOCK":
                         self.__typed += press
                         self.__shift = False
                         self.__backspace = False
-                else:
+                elif not self.__backspace:
+                    self.__backspaceTime = 70
                     self.__backspace = True
+                    self.__typed = self.__typed[:-1]
             else:
                 self.__time2 = time.time()
                 self.__typingChecker()
@@ -110,7 +113,7 @@ class SpeedTester:
             try:
                 if self.__text[i] == self.__typed[i]:
                     self.__pts += 1
-            except IndexError:             # User hasnot completed the sentence
+            except IndexError:  # User hasnot completed the sentence
                 break
         self.__statistics()
 
@@ -119,11 +122,10 @@ class SpeedTester:
         calculates the statistics
         :return:
         """
-        correctness = (self.__pts/ len(self.__text)) * 100
+        correctness = (self.__pts / len(self.__text)) * 100
         speed = abs(self.__time2 - self.__time)
         self.__stats.extend([correctness, speed])
         self.__screenToBeRendered = 'D'
-
 
     def __statisticsRenderer(self):
         """
@@ -150,24 +152,24 @@ class SpeedTester:
         font = pygame.font.Font("MADE Sunflower PERSONAL USE.otf", 23)
         self.__screen.blit(font.render(self.__text, True, (0, 0, 0)), (10, 100))
         img = font.render(self.__typed, True, (0, 0, 0))
-        rect = pygame.Rect((10,200), (self.__width - 20, img.get_height()+10))
+        rect = pygame.Rect((10, 200), (self.__width - 20, img.get_height() + 10))
         pygame.draw.rect(self.__screen, (255, 191, 0), rect, 1)
-        self.__screen.blit(img, (10,205))
+        self.__screen.blit(img, (10, 205))
 
     def __testDoneScreen(self):
         """
         renders the end screen with it is needed elements
         :return:
         """
-        self.__screen.blit(self.__font.render("Results", True ,(64, 78, 128) ) , (self.__width//3 , 10))
+        self.__screen.blit(self.__font.render("Results", True, (64, 78, 128)), (self.__width // 3, 10))
         img = pygame.image.load("results.svg")
-        img = pygame.transform.scale(img, (150,150))
-        self.__screen.blit(img, ((2*self.__width)//3, 0))
+        img = pygame.transform.scale(img, (150, 150))
+        self.__screen.blit(img, ((2 * self.__width) // 3, 0))
         font = pygame.font.Font("MADE Sunflower PERSONAL USE.otf", 40)
-        self.__screen.blit(font.render("Accuracy: " + f"{self.__stats[0]:.2f}%", True, (64, 78,128)), (20,150))
+        self.__screen.blit(font.render("Accuracy: " + f"{self.__stats[0]:.2f}%", True, (64, 78, 128)), (20, 150))
         self.__screen.blit(font.render("Speed: " + f"{self.__stats[1]:.2f}secs.", True, (64, 78, 128)), (20, 220))
-        self.__screen.blit(pygame.transform.scale(pygame.image.load("reset.svg"), (120,120)), (300, 350))
-        self.__screen.blit(self.__font.render("Reset?" , True , (64, 78,128)), (250, 280))
+        self.__screen.blit(pygame.transform.scale(pygame.image.load("reset.svg"), (120, 120)), (300, 350))
+        self.__screen.blit(self.__font.render("Reset?", True, (64, 78, 128)), (250, 280))
 
     def __mainScreen(self):
         """
