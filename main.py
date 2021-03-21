@@ -86,8 +86,8 @@ class SpeedTester:
             press = press.upper()
         if self.__caps > 0:
             press = press.swapcase()
-        if press != "space":
-            if press != "return":
+        if press != "space" or press != "SPACE":
+            if press != "return" or press !="RETURN":
                 if press != "backspace":
                     if press != "LEFT SHIFT" and press != "RIGHT SHIFT" and len(press) == 1 and press != "CAPS LOCK":
                         self.__typed += press
