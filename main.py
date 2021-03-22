@@ -20,9 +20,8 @@ class SpeedTester:
         self.__welcome_img = pygame.image.load("Welcome_img.png")
         self.__sentences = open("sentences.txt", "r").readlines()
         self.__text = ''.join(random.choice(self.__sentences))
-        self.__mouse = pygame.mouse.get_pos()
         self.__pts = 0
-        self.__stats = []  # can be anything or just spread it out to multiple variables if needed
+        self.__stats = [0,0]  # can be anything or just spread it out to multiple variables if needed
         self.__time = 0  # will be changed in the initializeTypingTest
         self.__time2 = 0
         self.__realTimeStat = False
@@ -65,11 +64,11 @@ class SpeedTester:
             if self.__resetButton[0] < self.__mouse[0] < self.__resetButton[1]:
                 if self.__resetButton[2] < self.__mouse[1] < self.__resetButton[3]:
                     self.__initializeTypingTest()
+                    self.__time = time.time()
                     self.__screenToBeRendered = "T"
 
     def __backspaceHandler(self):
         if self.__backspace:
-
             if self.__backspaceTime == 0:
                 self.__backspaceTime = 70
                 self.__typed = self.__typed[:-1]
@@ -124,7 +123,7 @@ class SpeedTester:
         """
         correctness = (self.__pts / len(self.__text)) * 100
         speed = abs(self.__time2 - self.__time)
-        self.__stats.extend([correctness, speed])
+        self.__stats[0] , self.__stats[1] = correctness, speed
         self.__screenToBeRendered = 'D'
 
     def __statisticsRenderer(self):
@@ -141,6 +140,7 @@ class SpeedTester:
         """
         self.__typed = ""
         self.__text = ''.join(random.choice(self.__sentences))
+        self.__pts = 0
 
     def __typingScreen(self):
         """
